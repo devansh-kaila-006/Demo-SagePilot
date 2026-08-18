@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sagepilot Demo</title>
+    <style>
+        :root {
+            --whatsapp-bg: #ece5dd;
+            --whatsapp-green: #dcf8c6;
+            --whatsapp-white: #ffffff;
+            --primary: #128C7E;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+        /* Chat UI */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #ddd;
+            background-color: var(--whatsapp-white);
+        }
+        .chat-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 500;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            background-color: var(--whatsapp-bg);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message {
+            max-width: 70%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            line-height: 1.4;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .message.user {
+            background-color: var(--whatsapp-green);
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+        .message.agent {
+            background-color: var(--whatsapp-white);
+            align-self: flex-start;
+            border-top-left-radius: 0;
+        }
+        .chat-input {
+            padding: 15px;
+            background-color: #f0f0f0;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1em;
+            outline: none;
+        }
+        .chat-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Audit Log UI */
+        .log-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+        }
+        .log-header {
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .log-table-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f9f9f9;
+            color: #555;
+            position: sticky;
+            top: 0;
+        }
+        .status-auto {
+            color: #128C7E;
+            font-weight: 500;
+            background-color: #e8f5e9;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .status-escalated {
+            color: #d32f2f;
+            font-weight: 500;
+            background-color: #ffebee;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chat Area -->
+    <div class="chat-container">
+        <div class="chat-header">
+            Support Agent
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message agent">Hi! I'm the automated support assistant. How can I help you today?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Audit Log Area -->
+    <div class="log-container">
+        <div class="log-header">Decision & Audit Log</div>
+        <div class="log-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Action</th>
+                        <th>Permission</th>
+                        <th>Confidence</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="log-body">
+                    <!-- Logs will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('chat-messages');
+        const inputField = document.getElementById('message-input');
+        const logBody = document.getElementById('log-body');
+
+        function appendMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.textContent = text;
+            messagesDiv.appendChild(div);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = inputField.value.trim();
+            if (!text) return;
+            
+            appendMessage(text, 'user');
+            inputField.value = '';
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    appendMessage(data.response, 'agent');
+                } else {
+                    appendMessage("Error: " + data.error, 'agent');
+                }
+            } catch (e) {
+                appendMessage("Failed to send message.", 'agent');
+            }
+            
+            // Refresh logs
+            fetchLogs();
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        async function fetchLogs() {
+            try {
+                const response = await fetch('/api/logs');
+                const logs = await response.json();
+                
+                logBody.innerHTML = '';
+                // Render logs in reverse chronological order
+                logs.reverse().forEach(log => {
+                    const tr = document.createElement('tr');
+                    
+                    const timeStr = new Date(log.timestamp).toLocaleTimeString();
+                    
+                    const statusClass = log.status.includes('Auto-Approved') ? 'status-auto' : 'status-escalated';
+                    
+                    tr.innerHTML = `
+                        <td>${timeStr}</td>
+                        <td>${log.action}</td>
+                        <td>${log.permission_used}</td>
+                        <td>${log.confidence}</td>
+                        <td><span class="${statusClass}">${log.status}</span></td>
+                    `;
+                    logBody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error("Failed to fetch logs", e);
+            }
+        }
+
+        // Poll logs every 3 seconds to keep UI fresh
+        setInterval(fetchLogs, 3000);
+        fetchLogs();
+    </script>
+</body>
+</html>

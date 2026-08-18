@@ -1,0 +1,51 @@
+[
+  {
+    "timestamp": "2026-08-19T02:36:24.073113",
+    "action": "answer_query",
+    "permission_used": "None",
+    "confidence": "Low",
+    "status": "Escalated - Out of Scope"
+  },
+  {
+    "timestamp": "2026-08-19T02:37:09.487924",
+    "action": "check_order_status",
+    "permission_used": "None",
+    "confidence": "High",
+    "status": "Auto-Approved"
+  },
+  {
+    "timestamp": "2026-08-19T02:37:28.078857",
+    "action": "issue_refund (Amount: 950.0)",
+    "permission_used": "check_refund_permission",
+    "confidence": "High",
+    "status": "Auto-Approved"
+  },
+  {
+    "timestamp": "2026-08-19T02:39:42.790699",
+    "action": "check_order_status",
+    "permission_used": "None",
+    "confidence": "High",
+    "status": "Auto-Approved"
+  },
+  {
+    "timestamp": "2026-08-19T02:39:48.369789",
+    "action": "issue_refund (Amount: 950.0)",
+    "permission_used": "check_refund_permission",
+    "confidence": "High",
+    "status": "Auto-Approved"
+  },
+  {
+    "timestamp": "2026-08-19T02:39:59.188924",
+    "action": "issue_refund (Amount: 3400.0)",
+    "permission_used": "check_refund_permission",
+    "confidence": "High",
+    "status": "Escalated - Exceeds Threshold"
+  },
+  {
+    "timestamp": "2026-08-19T02:40:26.379782",
+    "action": "check_order_status",
+    "permission_used": "None",
+    "confidence": "High",
+    "status": "Auto-Approved"
+  }
+]

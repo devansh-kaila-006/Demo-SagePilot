@@ -1,0 +1,74 @@
+{
+  "products": [
+    {
+      "id": "p1",
+      "name": "Hydrating Face Serum",
+      "category": "Skincare",
+      "description": "A deeply hydrating serum with hyaluronic acid, perfect for dry skin.",
+      "price": 1200
+    },
+    {
+      "id": "p2",
+      "name": "Vitamin C Glow Toner",
+      "category": "Skincare",
+      "description": "Brightening toner that evens skin tone and reduces dark spots.",
+      "price": 950
+    },
+    {
+      "id": "p3",
+      "name": "Matte Sunscreen SPF 50",
+      "category": "Sun Protection",
+      "description": "Lightweight, non-greasy sunscreen suitable for all skin types.",
+      "price": 1500
+    },
+    {
+      "id": "p4",
+      "name": "Overnight Renewal Cream",
+      "category": "Skincare",
+      "description": "Night cream with retinol for anti-aging and skin repair.",
+      "price": 2200
+    }
+  ],
+  "orders": [
+    {
+      "id": "1042",
+      "customer": "Alice Smith",
+      "items": [
+        "p1",
+        "p4"
+      ],
+      "total_amount": 3400,
+      "status": "Shipped",
+      "expected_delivery": "Tomorrow",
+      "payment_status": "Paid"
+    },
+    {
+      "id": "1043",
+      "customer": "Bob Johnson",
+      "items": [
+        "p2"
+      ],
+      "total_amount": 950,
+      "status": "Processing",
+      "expected_delivery": "In 3 days",
+      "payment_status": "Refunded \u20b9950.0"
+    },
+    {
+      "id": "1044",
+      "customer": "Charlie Davis",
+      "items": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "total_amount": 3650,
+      "status": "Delivered",
+      "expected_delivery": "Yesterday",
+      "payment_status": "Paid"
+    }
+  ],
+  "policies": {
+    "returns": "Items can be returned within 30 days of delivery. Must be unused and in original packaging.",
+    "shipping": "Free shipping on orders over \u00e2\u201a\u00b92000. Otherwise, \u00e2\u201a\u00b9150 flat rate."
+  }
+}
