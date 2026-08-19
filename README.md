@@ -28,7 +28,7 @@ Unlike a generic "chat with your data" RAG bot, this demo proves three specific 
 ## Prerequisites & Installation
 
 1. **Clone the repository and install dependencies:**
-   This project uses the modern (and deprecated for older syntax) Google Generative AI Python SDK.
+   This project uses the `google.generativeai` Python SDK (Note: you may see a deprecation warning on startup since Google recently announced the newer `google.genai` SDK).
    ```bash
    pip install -r requirements.txt
    ```
@@ -107,6 +107,6 @@ To see the system working exactly as designed, try sending these exact prompts o
 
 ## Troubleshooting
 
-- **500 Internal Server Error / 429 Quota Exceeded:** If you are testing the application rapidly using a free-tier Google API key, you may hit rate limits (Free tier is limited to 15 requests/minute and 20 requests/day for `gemini-3.5-flash`). Wait a few minutes before trying again, or use a paid-tier key.
+- **500 Internal Server Error / 429 Quota Exceeded:** If you are testing the application rapidly using a free-tier Google API key, you may hit Gemini's free-tier rate limits (see Google's rate limits page for current values). Wait a few minutes before trying again, or use a paid-tier key.
 - **Port 8000 in use:** If the server fails to start, make sure you don't have a background python process holding onto `localhost:8000`. You can kill it by restarting your terminal or hunting down the process ID.
 - **Unicode Errors on Windows Terminal:** Running `test_flows.py` in older Windows PowerShell versions may occasionally throw a `cp1252` encoding error when trying to print the Indian Rupee symbol (₹). The web UI at localhost:8000 uses UTF-8 and will always display correctly.
