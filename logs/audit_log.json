@@ -47,5 +47,12 @@
     "permission_used": "None",
     "confidence": "High",
     "status": "Auto-Approved"
+  },
+  {
+    "timestamp": "2026-08-19T02:44:44.417444",
+    "action": "answer_query",
+    "permission_used": "None",
+    "confidence": "Low",
+    "status": "Escalated - Out of Scope"
   }
 ]
